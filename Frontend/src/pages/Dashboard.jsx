@@ -5,13 +5,13 @@ import { Outlet } from 'react-router-dom'
 
 const Dashboard = () => {
   return (
-    <div className='min-h-screen'>
+    <div className='min-h-screen bg-background'>
       <Navbar />
-      <div className='flex'>
+      <div className='flex pt-10'>
         <Sidebar />
-        <div className='w-full ml-auto p-4'>
+        <main className='flex-1 md:ml-[300px] p-4 md:p-6'>
           <Outlet />
-        </div>
+        </main>
       </div>
     </div>
   )
