@@ -12,7 +12,6 @@ import axios from "axios";
 import { toast } from "sonner";
 import { setUser } from "@/redux/userSlice";
 
-// Define default data outside or at the top
 const defaultData = {
     firstName: "User",
     lastName: "",
@@ -32,7 +31,6 @@ const Profile = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const params = useParams();
     const userData = isAuthenticated ? user : defaultData;
 
     const [updateUser, setUpdateUser] = useState({
@@ -58,7 +56,6 @@ const Profile = () => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             setFile(selectedFile);
-            // Set temporary URL for immediate preview
             setUpdateUser({ ...updateUser, profilePic: URL.createObjectURL(selectedFile) });
         }
     }
@@ -71,8 +68,6 @@ const Profile = () => {
 
         try {
             const formData = new FormData();
-
-            // Append data fields (using current state values)
             formData.append('firstName', updateUser.firstName);
             formData.append('lastName', updateUser.lastName);
             formData.append('phoneNo', updateUser.phoneNo);
@@ -80,7 +75,6 @@ const Profile = () => {
             formData.append('city', updateUser.city);
             formData.append('pincode', updateUser.pincode);
 
-            // Append file if selected
             if (file) {
                 formData.append('file', file);
             }
@@ -91,12 +85,9 @@ const Profile = () => {
                 }
             });
 
-            // Check response data
             if (res.data.success) {
                 toast.success(res.data.message || `${type} updated successfully.`);
-                dispatch(setUser(res.data.user)); // Update Redux store with new user data
-
-                // Clear the local file state after successful upload/update
+                dispatch(setUser(res.data.user));
                 setFile(null);
             }
             else {
@@ -112,12 +103,37 @@ const Profile = () => {
         }
     };
 
+    const handleDeleteProfilePic = async () => {
+        try {
+            setIsSaving(true);
+            const accessToken = localStorage.getItem('accessToken');
+            const userId = userData._id;
 
-    const handleSignOut= async (e) => {
+            const res = await axios.delete(`http://localhost:5000/api/users/deleteprofilepic/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
+            if (res.data.success) {
+                toast.success(res.data.message || "Profile picture deleted successfully.");
+                dispatch(setUser(res.data.user));
+            } else {
+                toast.error(res.data.message || "Failed to delete profile picture.");
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "An error occurred while deleting profile picture.");
+            console.error("Delete Profile Picture Error:", error);
+        }
+        finally {
+            setIsSaving(false);
+        }
+    }
+
+
+    const handleSignOut = async (e) => {
         e.preventDefault();
-
-        // Dispatch logout *before* API call for immediate UI update, then revert if failed
-        dispatch(logoutUser()); // Optimistic UI update 
+        dispatch(logoutUser());
 
         try {
             const res = await axios.post("http://localhost:5000/api/users/logout", {}, {
@@ -142,7 +158,6 @@ const Profile = () => {
 
 
     if (!isAuthenticated) {
-        // ... (Access Denied Block) ...
         return (
             <div className="pt-32 pb-20 container mx-auto px-6 text-center">
                 <h1 className="text-3xl font-display text-destructive">Access Denied</h1>
@@ -155,7 +170,6 @@ const Profile = () => {
     }
 
     const renderProfileImage = () => {
-        // Use updateUser.profilePic for display, as it contains the current file URL if selected
         if (updateUser.profilePic) {
             return (
                 <img
@@ -165,7 +179,6 @@ const Profile = () => {
                 />
             );
         }
-        // Fallback to default icon
         return (
             <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 border border-primary/20">
                 <User className="w-12 h-12 text-primary" />
@@ -189,7 +202,6 @@ const Profile = () => {
                         </h1>
 
                         <div className="grid lg:grid-cols-3 gap-8">
-                            {/* Profile Card */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
@@ -203,24 +215,32 @@ const Profile = () => {
                                 </h2>
                                 <p className="text-sm text-primary mb-6">{userData.email}</p>
 
-                                {/* Profile Picture Upload Button */}
-                                <Button
-                                    variant="glow"
-                                    className="w-full gap-2 relative overflow-hidden"
-                                    disabled={isSaving}
-                                >
-                                    <Upload className="w-4 h-4" />
-                                    {file ? 'Change Photo' : 'Upload Photo'}
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                        onChange={handleFileChange}
+                                <div className="flex flex-row items-center justify-center gap-4">
+                                    <Button
+                                        variant="glow"
+                                        className="w-full gap-2 relative overflow-hidden"
                                         disabled={isSaving}
-                                    />
-                                </Button>
+                                    >
+                                        <Upload className="w-4 h-4" />
+                                        {file ? 'Change Photo' : 'Upload Photo'}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            onChange={handleFileChange}
+                                            disabled={isSaving}
+                                        />
+                                    </Button>
+                                    <Button 
+                                        variant="danger" 
+                                        onClick={handleDeleteProfilePic} 
+                                        className="w-full gap-2 relative overflow-hidden"
+                                        disabled={isSaving}
+                                    >
+                                        {isSaving ? "Deleting..." : "Delete Photo"}
+                                    </Button>
+                                </div>
 
-                                {/* Logout Button */}
                                 <Button
                                     variant="outline"
                                     className="w-full gap-2 mt-4 hover:bg-primary hover:text-white"
@@ -231,7 +251,6 @@ const Profile = () => {
                                 </Button>
                             </motion.div>
 
-                            {/* Personal Information Form */}
                             <motion.form
                                 onSubmit={(e) => handleSaveProfile(e, 'Personal Info')}
                                 initial={{ opacity: 0, y: 20 }}

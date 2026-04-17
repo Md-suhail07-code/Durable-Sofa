@@ -16,6 +16,7 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(66,125,106,0.55)] hover:shadow-[0_0_25px_rgba(66,125,106,0.7)] rounded-xl",
         hero: "bg-primary text-primary-foreground font-medium tracking-wide rounded-xl shadow-glow hover:shadow-[0_0_50px_hsl(var(--primary)/0.5)] active:scale-95 transition-all duration-200",
         elegant: "bg-transparent border-2 border-foreground/20 text-foreground rounded-xl hover:border-primary hover:text-primary transition-colors duration-300",
+        danger: "bg-destructive text-white  rounded-xl hover:bg-destructive/90 shadow-md shadow-destructive/30",
       },
 
       size: {
