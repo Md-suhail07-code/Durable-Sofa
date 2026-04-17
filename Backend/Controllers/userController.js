@@ -357,80 +357,127 @@ export const getUserById = async (req, res) => {
 }
 
 export const updateUserProfile = async (req, res) => {
-  try {
-    const userIdToUpdate = req.params.userId;
-    const loggedInUser = req.user;
+    try {
+        const userIdToUpdate = req.params.userId;
+        const loggedInUser = req.user;
 
-    const {
-      firstName,
-      lastName,
-      phoneNo,
-      address,
-      city,
-      pincode
-    } = req.body || {};
+        const {
+            firstName,
+            lastName,
+            phoneNo,
+            address,
+            city,
+            pincode
+        } = req.body || {};
 
-    if (
-      userIdToUpdate !== loggedInUser._id.toString() &&
-      loggedInUser.role !== "admin"
-    ) {
-      return res.status(403).json({
-        success: false,
-        message: "You can only update your own profile",
-      });
+        if (
+            userIdToUpdate !== loggedInUser._id.toString() &&
+            loggedInUser.role !== "admin"
+        ) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only update your own profile",
+            });
+        }
+
+        const user = await User.findById(userIdToUpdate);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        let profilePicUrl = user.profilePic;
+        let profilePicPublicId = user.profilePicPublicId;
+
+        if (req.file) {
+            if (profilePicPublicId) {
+                await cloudinary.uploader.destroy(profilePicPublicId);
+            }
+
+            const uploadResult = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: "profile_pics" },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                ).end(req.file.buffer);
+            });
+
+            profilePicUrl = uploadResult.secure_url;
+            profilePicPublicId = uploadResult.public_id;
+        }
+
+        user.firstName = firstName ?? user.firstName;
+        user.lastName = lastName ?? user.lastName;
+        user.phoneNo = phoneNo ?? user.phoneNo;
+        user.address = address ?? user.address;
+        user.city = city ?? user.city;
+        user.pincode = pincode ?? user.pincode;
+        user.profilePic = profilePicUrl;
+        user.profilePicPublicId = profilePicPublicId;
+
+        const updatedUser = await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            user: updatedUser,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: error.message,
+        });
     }
-
-    const user = await User.findById(userIdToUpdate);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    let profilePicUrl = user.profilePic;
-    let profilePicPublicId = user.profilePicPublicId;
-
-    if (req.file) {
-      if (profilePicPublicId) {
-        await cloudinary.uploader.destroy(profilePicPublicId);
-      }
-
-      const uploadResult = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream(
-          { folder: "profile_pics" },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        ).end(req.file.buffer);
-      });
-
-      profilePicUrl = uploadResult.secure_url;
-      profilePicPublicId = uploadResult.public_id;
-    }
-
-    user.firstName = firstName ?? user.firstName;
-    user.lastName = lastName ?? user.lastName;
-    user.phoneNo = phoneNo ?? user.phoneNo;
-    user.address = address ?? user.address;
-    user.city = city ?? user.city;
-    user.pincode = pincode ?? user.pincode;
-    user.profilePic = profilePicUrl;
-    user.profilePicPublicId = profilePicPublicId;
-
-    const updatedUser = await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      user: updatedUser,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
-    });
-  }
 };
+
+export const deleteProfilePic = async (req, res) => {
+    try {
+        const userIdToUpdate = req.params.userId;
+        const loggedInUser = req.user;
+
+        if (userIdToUpdate !== loggedInUser._id.toString() && loggedInUser.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "You can only delete your own profile picture"
+            })
+        }
+
+        const user = await User.findById(userIdToUpdate);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        if(!user.profilePicPublicId){
+            return res.status(400).json({
+                success: false,
+                message: "No profile picture to delete"
+            })
+        }
+
+        if (user.profilePicPublicId) {
+            await cloudinary.uploader.destroy(user.profilePicPublicId);
+        }
+        user.profilePic = null;
+        user.profilePicPublicId = null;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            user,
+            message: "Profile picture deleted successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: error.message,
+        });
+    }
+}
