@@ -69,7 +69,6 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex">
-            {/* Left Side - Image */}
             <div className="hidden lg:flex lg:w-1/2 relative">
                 <img
                     src={loginBg}
@@ -105,7 +104,6 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* Right Side - Form Container */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-background border border-border">
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
@@ -113,14 +111,11 @@ const Login = () => {
                     transition={{ duration: 0.5 }}
                     className="w-full max-w-md"
                 >
-                    {/* Mobile Logo */}
                     <Link to="/" className="lg:hidden inline-block mb-8 text-center w-full">
                         <span className="font-display text-3xl font-semibold text-foreground">
                             Durable<span className="text-primary">Sofa</span>
                         </span>
                     </Link>
-
-                    {/* Header */}
                     <div className="mb-8">
                         <h1 className="font-display text-3xl font-semibold text-foreground mb-2">
                             Welcome back
@@ -130,7 +125,6 @@ const Login = () => {
                         </p>
                     </div>
 
-                    {/* Form */}
                     <form onSubmit={handleLogin} className="space-y-5">
 
                         <div>
@@ -210,7 +204,6 @@ const Login = () => {
                         {error && <p className="text-sm text-destructive mt-2 text-center">{error}</p>}
                     </form>
 
-                    {/* Divider */}
                     <div className="relative my-8">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-border" />
@@ -222,7 +215,6 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {/* Social Login */}
                     <div className="grid grid-cols-2 gap-4">
                         <Button onClick={() => window.open("http://localhost:5000/auth/google", "_self")} variant="outline" className="h-12 col-span-2">
                             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -247,7 +239,6 @@ const Login = () => {
                         </Button>
                     </div>
 
-                    {/* Toggle to Signup */}
                     <p className="text-center mt-8 text-muted-foreground">
                         Don't have an account?{" "}
                         <Link

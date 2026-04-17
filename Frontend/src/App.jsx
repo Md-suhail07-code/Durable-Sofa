@@ -28,11 +28,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/signup',
-    element: <Signup />
+    element: <><ProtectedRoute><Signup /></ProtectedRoute></>
   },
   {
     path: '/login',
-    element: <Login />
+    element: <><ProtectedRoute><Login /></ProtectedRoute></>
   },
   {
     path: '/auth-success',
@@ -56,11 +56,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/products',
-    element: <Products />
+    element: <><ProtectedRoute><Products /></ProtectedRoute></>
   },
   {
     path: '/product/:_id',
-    element: <ProductDetails />
+    element: <><ProtectedRoute><ProductDetails /></ProtectedRoute></>
   },
   {
     path: '/profile/:userId',
