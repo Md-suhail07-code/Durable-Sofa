@@ -107,7 +107,6 @@ export const deleteProduct = async (req, res) => {
       })
     }
 
-    //Delete image from cloudinary
 
     if (product.productImages && product.productImages.length > 0) {
       for (let img of product.productImages) {
@@ -157,7 +156,6 @@ export const updateProduct = async (req, res) => {
     let updatedImages = [];
     let removedImages = [];
 
-    // 🔹 keep selected old images
     if (existingImages) {
       let existingIds = [];
 
@@ -178,7 +176,6 @@ export const updateProduct = async (req, res) => {
         (img) => !existingIds.includes(img.public_id)
       );
 
-      // delete removed images from cloudinary
       for (const img of removedImages) {
         try {
           await cloudinary.uploader.destroy(img.public_id);
@@ -190,7 +187,6 @@ export const updateProduct = async (req, res) => {
       updatedImages = product.productImages;
     }
 
-    // add new images
     if (req.files?.length) {
       for (const file of req.files) {
         const fileUri = getDataUri(file);
