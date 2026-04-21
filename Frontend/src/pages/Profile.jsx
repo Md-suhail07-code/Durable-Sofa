@@ -7,7 +7,7 @@ import { User, Mail, Phone, MapPin, LogOut, Upload } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "@/redux/userSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { setUser } from "@/redux/userSlice";
@@ -59,6 +59,28 @@ const Profile = () => {
             setUpdateUser({ ...updateUser, profilePic: URL.createObjectURL(selectedFile) });
         }
     }
+
+    const getUserProfile = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const res = await axios.get(`http://localhost:5000/api/users/users/me/${userData._id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            if (res.data.success) {
+                setUpdateUser(res.data.user);
+                dispatch(setUser(res.data.user));
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to fetch user profile.");
+            console.error("Get User Profile Error:", error);
+        }
+    }
+
+    useEffect(() => {
+        getUserProfile();
+    }, [userData._id], dispatch, setUpdateUser);
 
     const handleSaveProfile = async (e, type) => {
         e.preventDefault();
