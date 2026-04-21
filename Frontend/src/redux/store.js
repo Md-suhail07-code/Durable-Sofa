@@ -3,14 +3,14 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage';
 import userSlice from "./userSlice.js";
 import cartSlice from "./cartSlice.js";
+import productSlice from "./productSlice.js";
 
-// 1. Combine all reducers
 const rootReducer = combineReducers({
     user: userSlice,
-    cart: cartSlice
+    cart: cartSlice,
+    product: productSlice,
 });
 
-// 2. Set up persistence config
 const persistConfig = {
     key: 'root',
     version: 1,
@@ -19,7 +19,6 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// 3. Configure the store
 const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
