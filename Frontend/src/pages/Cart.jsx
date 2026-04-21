@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Loader2, ShoppingCart, ArrowRight } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
@@ -14,6 +14,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   
   const cart = useSelector((state) => state.cart.cart || [])
 
@@ -86,7 +87,7 @@ const Cart = () => {
 
   const subtotal = cart.totalPrice
   const shippingCost = subtotal > 10000 ? 0 : 500;
-  const tax = subtotal * 0.18; // Assuming 18% GST
+  const tax = subtotal * 0.18;
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,7 +103,6 @@ const Cart = () => {
         </motion.h1>
 
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* CART ITEMS SECTION */}
           <div className="flex-1">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-20">
@@ -146,7 +146,6 @@ const Cart = () => {
             )}
           </div>
 
-          {/* ORDER SUMMARY SECTION */}
           {cartItems.length > 0 && (
             <aside className="lg:w-96">
               <motion.div 
@@ -178,7 +177,7 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Button variant="hero" className="w-full mt-8 h-14 text-lg group">
+                <Button onClick={() => navigate('/address')} variant="hero" className="w-full mt-8 h-14 text-lg group">
                   Order Now
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
