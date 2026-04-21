@@ -322,6 +322,7 @@ export const allUsers = async (req, res) => {
         const users = await User.find();
         return res.status(200).json({
             success: true,
+            message: "All users fetched successfully",
             users
         })
     } catch (error) {
@@ -364,6 +365,7 @@ export const updateUserProfile = async (req, res) => {
         const {
             firstName,
             lastName,
+            role,
             phoneNo,
             address,
             city,
@@ -412,6 +414,7 @@ export const updateUserProfile = async (req, res) => {
 
         user.firstName = firstName ?? user.firstName;
         user.lastName = lastName ?? user.lastName;
+        user.role = role ?? user.role;
         user.phoneNo = phoneNo ?? user.phoneNo;
         user.address = address ?? user.address;
         user.city = city ?? user.city;
@@ -433,7 +436,7 @@ export const updateUserProfile = async (req, res) => {
             error: error.message,
         });
     }
-};
+}
 
 export const deleteProfilePic = async (req, res) => {
     try {
@@ -479,5 +482,35 @@ export const deleteProfilePic = async (req, res) => {
             message: "Something went wrong",
             error: error.message,
         });
+    }
+}
+
+export const deleteUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        if (user.profilePicPublicId) {
+            await cloudinary.uploader.destroy(user.profilePicPublicId);
+        }
+
+        await User.findByIdAndDelete(userId);
+        await Session.deleteMany({ user: userId });
+        return res.status(200).json({
+            success: true,
+            message: "User deleted successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: error.message
+        })
     }
 }
