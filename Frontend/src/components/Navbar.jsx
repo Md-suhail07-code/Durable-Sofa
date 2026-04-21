@@ -75,6 +75,15 @@ export const Navbar = () => {
                 />
             );
         }
+        else if (user.googleProfilePic) {
+            return (
+                <img
+                    src={user.googleProfilePic}
+                    alt={`${user.firstName}'s Google Profile`}
+                    className="h-8 w-8 rounded-full object-cover border-2 border-primary group-hover:scale-105 transition-transform"
+                />
+            );
+        }
         return (
             <Button variant="ghost" size="icon" className="hover:bg-accent/60">
                 <User className="h-5 w-5 text-primary group-hover:scale-105 transition-transform" />
