@@ -20,6 +20,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminProducts from './pages/admin/AdminProducts'
 import NotFound from './pages/NotFound'
+import AddressForm from './pages/AddressForm'
 
 const router = createBrowserRouter([
   {
@@ -28,11 +29,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/signup',
-    element: <><ProtectedRoute><Signup /></ProtectedRoute></>
+    element: <Signup />
   },
   {
     path: '/login',
-    element: <><ProtectedRoute><Login /></ProtectedRoute></>
+    element: <Login />
   },
   {
     path: '/auth-success',
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: '/cart',
     element: <><ProtectedRoute><Cart /></ProtectedRoute></>
+  },
+  {
+    path: '/address',
+    element: <><ProtectedRoute><AddressForm /></ProtectedRoute></>
   },
   {
     path: '/dashboard',
