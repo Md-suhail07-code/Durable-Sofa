@@ -77,6 +77,12 @@ const Cart = () => {
         dispatch(setCart(cart));
         setCartItems(cart.items);
       } catch (error) {
+        if(error.response && error.response.status === 400){
+          toast.error("Session expired. Please log in again.")
+          localStorage.removeItem("accessToken")
+          localStorage.removeItem("user")
+          navigate('/login')
+        }
         console.error("Error fetching cart items:", error)
       } finally {
         setIsLoading(false)
