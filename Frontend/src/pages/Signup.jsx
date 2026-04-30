@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import loginBg from "@/assets/login-bg.jpg";
 import axios from "axios";
 import { toast } from "sonner";
+import { API_URL } from "@/config";
 
 const VerificationSentMessage = ({ email }) => (
     <div className="w-full flex items-center justify-center p-6 sm:p-12 bg-background border border-border">
@@ -75,7 +76,7 @@ const Signup = () => {
         setIsLoading(true);
 
         try {
-            const res = await axios.post("http://localhost:5000/api/users/register", formData, {
+            const res = await axios.post(`${API_URL}/api/users/register`, formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -285,7 +286,7 @@ const Signup = () => {
 
                                 {/* Social Login */}
                                 <div className="grid grid-cols-1 gap-4">
-                                    <Button variant="outline" onClick={() => window.open("http://localhost:5000/auth/google", "_self")} className="h-12">
+                                    <Button variant="outline" onClick={() => window.open(`${API_URL}/auth/google`, "_self")} className="h-12">
                                         <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                                             <path
                                                 fill="currentColor"

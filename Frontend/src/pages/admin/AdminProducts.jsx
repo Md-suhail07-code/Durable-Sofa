@@ -6,6 +6,7 @@ import { setProducts } from '@/redux/productSlice'
 import AdminProductDetails from '@/components/AdminProductDetails'
 import ProductSearch from '@/components/ProductSearch'
 import ProductFilter from '@/components/ProductFilter'
+import { API_URL } from '@/config'
 
 const AdminProducts = () => {
   const { products } = useSelector((state) => state.product)
@@ -16,7 +17,7 @@ const AdminProducts = () => {
 
   const getProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products/get-products");
+      const res = await axios.get(`${API_URL}/api/products/get-products`);
       if (res.data.success) {
         dispatch(setProducts(res.data.products))
       }

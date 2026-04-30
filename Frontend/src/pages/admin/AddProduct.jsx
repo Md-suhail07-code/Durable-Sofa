@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { API_URL } from "@/config";
 
 const AddProduct = () => {
     const [formData, setFormData] = useState({
@@ -65,7 +66,7 @@ const AddProduct = () => {
         });
 
         try {
-            const res = await axios.post("http://localhost:5000/api/products/add", data, {
+            const res = await axios.post(`${API_URL}/api/products/add`, data, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
                     "Content-Type": "multipart/form-data",

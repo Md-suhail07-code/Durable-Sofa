@@ -20,6 +20,7 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { useDispatch, useSelector } from 'react-redux'
+import { API_URL } from '@/config'
 
 const AdminProductDetails = ({ details, onProductUpdate }) => {
     const { _id, name, basePrice, category, description, productImages } = details
@@ -45,7 +46,7 @@ const AdminProductDetails = ({ details, onProductUpdate }) => {
         setIsUpdating(true)
         try {
             const token = localStorage.getItem("accessToken");
-            const res = await axios.put(`http://localhost:5000/api/products/update-products/${_id}`, formData, {
+            const res = await axios.put(`${API_URL}/api/products/update-products/${_id}`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -66,7 +67,7 @@ const AdminProductDetails = ({ details, onProductUpdate }) => {
     const handleDelete = async () => {
         try {
             const token = localStorage.getItem("accessToken");
-            const res = await axios.delete(`http://localhost:5000/api/products/delete-products/${_id}`, {
+            const res = await axios.delete(`${API_URL}/api/products/delete-products/${_id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

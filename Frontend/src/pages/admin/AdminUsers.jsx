@@ -16,6 +16,7 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog"
+import { API_URL } from "@/config"
 
 const SearchBar = ({ searchValue, setSearchValue }) => {
   useEffect(() => {
@@ -77,7 +78,7 @@ const AdminUsers = () => {
   const getUsers = async () => {
     try {
       setLoading(true)
-      const res = await axios.get("http://localhost:5000/api/users/allusers", {
+      const res = await axios.get(`${API_URL}/api/users/allusers`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
       })
       if (res.data.success) setUsers(res.data.users)
@@ -110,7 +111,7 @@ const AdminUsers = () => {
     e.preventDefault()
     setIsActionLoading(selectedUser)
     try {
-      const res = await axios.put(`http://localhost:5000/api/users/updateprofile/${selectedUser}`, editFormData, {
+      const res = await axios.put(`${API_URL}/api/users/updateprofile/${selectedUser}`, editFormData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
       })
       if (res.data.success) {
@@ -129,7 +130,7 @@ const AdminUsers = () => {
     if (!confirm("Are you sure you want to delete this user?")) return
     setIsActionLoading(userId)
     try {
-      const res = await axios.delete(`http://localhost:5000/api/users/deleteuser/${userId}`, {
+      const res = await axios.delete(`${API_URL}/api/users/deleteuser/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
       })
       if (res.data.success) {

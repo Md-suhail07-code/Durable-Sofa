@@ -5,7 +5,8 @@ import axios from 'axios';
 import { motion } from 'framer-motion'; // Import motion
 import { Loader2, CheckCircle } from 'lucide-react'; // Import icons
 import { setUser } from '@/redux/userSlice';
-import { toast } from 'sonner'; // Use toast for feedback
+import { toast } from 'sonner';
+import { API_URL } from '@/config'; // Use toast for feedback
 
 const AuthSuccess = () => {
     const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const AuthSuccess = () => {
                 setLoadingStatus('Fetching user profile...');
                 
                 try {
-                    const res = await axios.get('http://localhost:5000/auth/me', {
+                    const res = await axios.get(`${API_URL}/auth/me`, {
                         headers: {
                             Authorization: `Bearer ${accessToken}`
                         }

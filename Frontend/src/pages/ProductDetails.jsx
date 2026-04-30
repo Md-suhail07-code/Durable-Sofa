@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCart } from '@/redux/cartSlice';
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
+import { API_URL } from '@/config'
 
 const ProductDetails = () => {
     const { _id } = useParams();
@@ -26,7 +27,7 @@ const ProductDetails = () => {
     const getProduct = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:5000/api/products/getProduct/${_id}`);
+            const res = await axios.get(`${API_URL}/api/products/getProduct/${_id}`);
             setProduct(res.data.prod);
         } catch (error) {
             console.error("Error fetching product:", error);
@@ -48,7 +49,7 @@ const ProductDetails = () => {
         try {
             setAddingToCart(true);
             const res = await axios.post(
-                'http://localhost:5000/api/cart/add-to-cart',
+                `${API_URL}/api/cart/add-to-cart`,
                 { productID: _id },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

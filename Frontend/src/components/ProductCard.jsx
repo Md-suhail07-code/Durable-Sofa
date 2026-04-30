@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCart } from '@/redux/cartSlice';
 import { Badge } from './ui/badge';
+import { API_URL } from '@/config';
 
 const ProductCard = ({ product, index }) => {
     const {
@@ -61,7 +62,7 @@ const ProductCard = ({ product, index }) => {
 
         try {
             const res = await axios.post(
-                'http://localhost:5000/api/cart/add-to-cart',
+                `${API_URL}/api/cart/add-to-cart`,
                 { productID: _id },
                 {
                     headers: {

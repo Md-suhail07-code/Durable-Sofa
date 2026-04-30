@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
+import { API_URL } from '@/config'
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([])
@@ -18,7 +19,7 @@ const Cart = () => {
   
   const cart = useSelector((state) => state.cart.cart || [])
 
-  const API = "http://localhost:5000/api/cart"
+  const API = `${API_URL}/api/cart`
   const accessToken = localStorage.getItem("accessToken")
 
   const updateQuantity = async (productID, type) => {

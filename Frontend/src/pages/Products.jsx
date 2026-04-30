@@ -8,6 +8,7 @@ import { Loader2, FilterX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import ProductFilter from '@/components/ProductFilter'
 import FiltersSideBar from '@/components/FiltersSideBar'
+import { API_URL } from '@/config'
 
 const Products = () => {
   const [productsList, setProductsList] = useState([]);
@@ -22,7 +23,7 @@ const Products = () => {
     const getProducts = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get("http://localhost:5000/api/products/get-products");
+        const res = await axios.get(`${API_URL}/api/products/get-products`);
         setProductsList(res.data.products);
       } catch (error) {
         console.error("Error fetching products:", error);

@@ -8,7 +8,8 @@ import loginBg from "@/assets/login-bg.jpg";
 import axios from "axios";
 import { toast } from "sonner";
 import { useDispatch } from 'react-redux'
-import { setUser } from "@/redux/userSlice"; 
+import { setUser } from "@/redux/userSlice";
+import { API_URL } from "@/config"; 
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +36,7 @@ const Login = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/users/login", formData, {
+            const response = await axios.post(`${API_URL}/api/users/login`, formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -216,7 +217,7 @@ const Login = () => {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Button onClick={() => window.open("http://localhost:5000/auth/google", "_self")} variant="outline" className="h-12 col-span-2">
+                        <Button onClick={() => window.open(`${API_URL}/auth/google`, "_self")} variant="outline" className="h-12 col-span-2">
                             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                                 <path
                                     fill="currentColor"

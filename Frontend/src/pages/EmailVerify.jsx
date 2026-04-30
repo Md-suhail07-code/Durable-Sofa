@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { API_URL } from "@/config";
 
 const EmailVerify = () => {
     const [status, setStatus] = React.useState('Verifying your email address...');
@@ -24,7 +25,7 @@ const EmailVerify = () => {
 
         const verifyEmail = async () => {
             try {
-                const res = await axios.post(`http://localhost:5000/api/users/verify`, {}, {
+                const res = await axios.post(`${API_URL}/api/users/verify`, {}, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

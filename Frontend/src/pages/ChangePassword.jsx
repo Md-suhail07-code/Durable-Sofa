@@ -5,6 +5,7 @@ import { Loader2, Lock, CheckCircle, Eye, EyeOff } from 'lucide-react' // Added 
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { API_URL } from "@/config";
 
 const ChangePassword = () => {
     const { email } = useParams()
@@ -36,7 +37,7 @@ const ChangePassword = () => {
         try {
             setIsLoading(true)
             // Using placeholder URL from previous context
-            const res = await axios.post(`http://localhost:5000/api/users/changepassword/${email}`, {
+            const res = await axios.post(`${API_URL}/api/users/changepassword/${email}`, {
                 newPassword,
                 confirmPassword
             })

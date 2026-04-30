@@ -8,6 +8,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "@/redux/userSlice";
 import { setCart } from "@/redux/cartSlice";
+import { API_URL } from "@/config";
 
 const navLinks = (isAuthenticated) => {
     const getHref = (path) => isAuthenticated ? path : "/login";
@@ -35,7 +36,7 @@ export const Navbar = () => {
         e.preventDefault();
         setIsOpen(false);
         try {
-            const res = await axios.post("http://localhost:5000/api/users/logout", {}, {
+            const res = await axios.post(`${API_URL}/api/users/logout`, {}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
                 }

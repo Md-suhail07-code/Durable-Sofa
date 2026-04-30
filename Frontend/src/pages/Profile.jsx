@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { setUser } from "@/redux/userSlice";
+import { API_URL } from "@/config";
 
 const defaultData = {
     firstName: "User",
@@ -63,7 +64,7 @@ const Profile = () => {
     const getUserProfile = async () => {
         try {
             const accessToken = localStorage.getItem('accessToken');
-            const res = await axios.get(`http://localhost:5000/api/users/users/me/${userData._id}`, {
+            const res = await axios.get(`${API_URL}/api/users/users/me/${userData._id}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -101,7 +102,7 @@ const Profile = () => {
                 formData.append('file', file);
             }
 
-            const res = await axios.put(`http://localhost:5000/api/users/updateprofile/${userData._id}`, formData, {
+            const res = await axios.put(`${API_URL}/api/users/updateprofile/${userData._id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -131,7 +132,7 @@ const Profile = () => {
             const accessToken = localStorage.getItem('accessToken');
             const userId = userData._id;
 
-            const res = await axios.delete(`http://localhost:5000/api/users/deleteprofilepic/${userId}`, {
+            const res = await axios.delete(`${API_URL}/api/users/deleteprofilepic/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -158,7 +159,7 @@ const Profile = () => {
         dispatch(logoutUser());
 
         try {
-            const res = await axios.post("http://localhost:5000/api/users/logout", {}, {
+            const res = await axios.post(`${API_URL}/api/users/logout`, {}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
                 }
