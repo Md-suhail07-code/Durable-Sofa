@@ -6,6 +6,7 @@ import userRoute from './Routes/userRoute.js';
 import authRoute from './Routes/authRoute.js';
 import productRoute from './Routes/productRoute.js'
 import cartRoute from './Routes/cartRoute.js';
+import addressRoute from './Routes/addressRoute.js';
 import './config/passport.js';
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use('/auth',authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/products', productRoute);
 app.use('/api/cart', cartRoute);
+app.use('/api/address', addressRoute);
 
 // http://localhost:5000/api/users/register
 
