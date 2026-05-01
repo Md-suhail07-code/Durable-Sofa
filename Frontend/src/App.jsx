@@ -21,6 +21,7 @@ import AdminUsers from './pages/admin/AdminUsers'
 import AdminProducts from './pages/admin/AdminProducts'
 import NotFound from './pages/NotFound'
 import AddressForm from './pages/AddressForm'
+import { Navbar } from './components/Navbar'
 
 const router = createBrowserRouter([
   {
@@ -73,7 +74,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/address',
-    element: <><ProtectedRoute><AddressForm /></ProtectedRoute></>
+    element: <><ProtectedRoute><Navbar /><AddressForm /></ProtectedRoute></>
   },
   {
     path: '/dashboard',
