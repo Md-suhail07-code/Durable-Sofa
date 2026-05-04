@@ -1,47 +1,67 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+const orderSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     products: [
-        {
-            productID: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Product',
-                required: true
-            },
-            quantity: {
-                type: Number,
-                required: true,
-                default: 1
-            },
-        }
+      {
+        productID: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          default: 1,
+        },
+      },
     ],
     totalPrice: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     tax: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     shipping: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
+    },
+    addressId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address",
+        required: true,
     },
     status: {
-        type: String,
-        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
-        default: 'pending'
+      type: String,
+      enum: [
+        "pending",
+        "paid",
+        "failed",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+      ],
+      default: "pending",
     },
     razorpayPaymentId: {
-        type: String,
+      type: String,
     },
     razorpayOrderId: {
-        type: String,
+      type: String,
     },
     razorpaySignature: {
-        type: String,
+      type: String,
     },
-}, { timestamps: true });
+  },
+  { timestamps: true },
+);
 
 export const Order = mongoose.model("Order", orderSchema);

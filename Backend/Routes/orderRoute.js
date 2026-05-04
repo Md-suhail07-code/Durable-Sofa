@@ -1,6 +1,6 @@
 import express from "express";
 import { createOrder, verifyPayment } from "../Controllers/orderController.js";
-import { isAuthenticated } from "../Middleware/authMiddleware.js";
+import { isAuthenticated } from "../middleware/isAuthenticated.js";
 
 const router = express.Router();
 
