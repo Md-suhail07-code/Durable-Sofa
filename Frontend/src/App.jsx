@@ -22,6 +22,8 @@ import AdminProducts from './pages/admin/AdminProducts'
 import NotFound from './pages/NotFound'
 import AddressForm from './pages/AddressForm'
 import { Navbar } from './components/Navbar'
+import Orders from './pages/Orders'
+import OrderSuccess from './pages/OrderSuccess'
 
 const router = createBrowserRouter([
   {
@@ -75,6 +77,14 @@ const router = createBrowserRouter([
   {
     path: '/address',
     element: <><ProtectedRoute><Navbar /><AddressForm /></ProtectedRoute></>
+  },
+  {
+    path: '/order-success',
+    element: <><ProtectedRoute><OrderSuccess /></ProtectedRoute></>
+  },
+  {
+    path: '/orders',
+    element: <><ProtectedRoute><Orders /></ProtectedRoute></>
   },
   {
     path: '/dashboard',
