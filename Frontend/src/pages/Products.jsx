@@ -9,72 +9,84 @@ import { Button } from '@/components/ui/button'
 import ProductFilter from '@/components/ProductFilter'
 import FiltersSideBar from '@/components/FiltersSideBar'
 import { API_URL } from '@/config'
+import { useDispatch, useSelector } from 'react-redux'
+import { setProducts } from '@/redux/productSlice'
 
 const Products = () => {
-  const [productsList, setProductsList] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  // Fix 1: useSelector returns value only, not [value, setter]
+  const productsList = useSelector((state) => state.product?.products || []);
   const [isLoading, setIsLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchValue, setSearchValue] = useState('');
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [sortBy, setSortBy] = useState("default");
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    // Fix 4: AbortController to cancel request on unmount
+    const controller = new AbortController();
+
     const getProducts = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get(`${API_URL}/api/products/get-products`);
-        setProductsList(res.data.products);
+        const res = await axios.get(`${API_URL}/api/products/get-products`, {
+          signal: controller.signal
+        });
+        // Fix 1: Only dispatch to Redux, don't set local state
+        dispatch(setProducts(res.data.products));
       } catch (error) {
-        console.error("Error fetching products:", error);
+        if (error.name!== 'CanceledError') {
+          console.error("Error fetching products:", error);
+        }
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
-    getProducts();
-  }, []);
 
-  useEffect(() => {
-    let result = [...productsList];
-    if (activeCategory !== "All") {
-      result = result.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
+    // Only fetch if Redux is empty
+    if (productsList.length === 0) getProducts();
+    else setIsLoading(false);
+
+    return () => controller.abort();
+  }, [dispatch, productsList.length]); // Fix 2: add deps
+
+  // Fix 3: useMemo to avoid recalculating on every render + avoid mutation
+  const filteredProducts = useMemo(() => {
+    let result = [...productsList]; // copy before sort to avoid mutating Redux
+
+    if (activeCategory!== "All") {
+      result = result.filter(p => p.category?.toLowerCase() === activeCategory.toLowerCase());
     }
-    if (searchValue.trim() !== "") {
+    if (searchValue.trim()!== "") {
       const query = searchValue.toLowerCase();
       result = result.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
+        p.name?.toLowerCase().includes(query) ||
+        p.description?.toLowerCase().includes(query)
       );
     }
 
-    result = result.filter(p => p.basePrice >= priceRange[0] && p.basePrice <= priceRange[1])
+    result = result.filter(p => p.basePrice >= priceRange[0] && p.basePrice <= priceRange[1]);
 
     if (sortBy === "lowToHigh") {
       result.sort((a, b) => a.basePrice - b.basePrice);
-    }
-    else if (sortBy === "highToLow") {
+    } else if (sortBy === "highToLow") {
       result.sort((a, b) => b.basePrice - a.basePrice);
     }
 
-    setFilteredProducts(result);
+    return result;
   }, [activeCategory, searchValue, priceRange, productsList, sortBy]);
 
   const viewAllProducts = () => {
     setSearchValue('');
     setActiveCategory("All");
-    setPriceRange([0, 100000])
-  }
-
-  const handlePriceRange = (value) => {
-    setPriceRange(value)
+    setPriceRange([0, 100000]);
+    setSortBy("default"); // reset sort too
   }
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-
       <div className="container mx-auto px-6 py-32">
-        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -90,7 +102,6 @@ const Products = () => {
 
           <div className="max-w-5xl mx-auto w-full flex flex-col md:flex-row justify-between items-center gap-4 mt-10">
             <div className="w-full md:w-auto flex-1 max-w-md">
-              {/* Pass searchValue and setter to keep input in sync */}
               <ProductSearch searchValue={searchValue} setSearchValue={setSearchValue} />
             </div>
             <div className="w-full md:w-auto">
@@ -99,24 +110,23 @@ const Products = () => {
           </div>
         </motion.div>
 
-        {/* Main Body Section */}
         <div className="flex flex-col lg:flex-row gap-10">
           <aside className="w-full lg:w-64 flex-shrink-0">
             <FiltersSideBar
               activeCategory={activeCategory}
               setActiveCategory={setActiveCategory}
               priceRange={priceRange}
-              setPriceRange={handlePriceRange}
+              setPriceRange={setPriceRange}
             />
           </aside>
 
           <div className="flex-1">
-            {isLoading ? (
+            {isLoading? (
               <div className="flex flex-col items-center justify-center py-20 text-primary">
                 <Loader2 className="h-10 w-10 animate-spin mb-4" />
                 <p className="font-medium animate-pulse text-muted-foreground">Loading collection...</p>
               </div>
-            ) : filteredProducts.length > 0 ? (
+            ) : filteredProducts.length > 0? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                 <AnimatePresence mode="popLayout">
                   {filteredProducts.map((product, index) => (
