@@ -40,7 +40,6 @@ import axios from "axios";
 import { API_URL } from "@/config";
 import { setCart } from "@/redux/cartSlice";
 import { useNavigate } from "react-router-dom";
-import { address } from "framer-motion/client";
 
 const AddressForm = () => {
   const dispatch = useDispatch();
@@ -223,7 +222,7 @@ const AddressForm = () => {
         `${API_URL}/api/orders/create`,
         {
           products: cartItems.map((item) => ({
-            productID: item._id,
+            productID: item.productID,
             quantity: item.quantity,
           })),
           totalPrice: totalAmount,
