@@ -24,6 +24,7 @@ import AddressForm from './pages/AddressForm'
 import { Navbar } from './components/Navbar'
 import Orders from './pages/Orders'
 import OrderSuccess from './pages/OrderSuccess'
+import AdminOrders from './pages/admin/AdminOrders'
 
 const router = createBrowserRouter([
   {
@@ -84,7 +85,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/orders',
-    element: <><ProtectedRoute><Orders /></ProtectedRoute></>
+    element: <><ProtectedRoute><Navbar /><Orders /></ProtectedRoute></>
   },
   {
     path: '/dashboard',
@@ -99,7 +100,7 @@ const router = createBrowserRouter([
         element: <AdminSales />
       },
       {
-        path: 'orders/:userId',
+        path: 'users/orders/:userId',
         element: <ShowUserOrders />
       },
       {
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
         path: 'users',
         element: <AdminUsers />
       },
+      {
+        path: 'orders',
+        element: <AdminOrders />
+      }
     ]
   },
   {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Menu, X, ShoppingBag, User, ShoppingCart, Home, Package, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -16,7 +16,7 @@ const navLinks = (isAuthenticated) => {
         { name: "Home", href: "/", icon: Home, span: false },
         { name: "Products", href: getHref("/products"), icon: Package, span: false },
         { name: "Cart", href: getHref("/cart"), icon: ShoppingCart, span: true },
-        { name: "Orders", href: getHref(("/orders", isAuthenticated)), icon: ShoppingBag, span: false },
+        { name: "Orders", href: getHref("/orders"), icon: ShoppingBag, span: false },
         { name: "Dashboard", href: getHref("/dashboard"), icon: LayoutDashboard, span: false }
     ];
 };
@@ -96,17 +96,12 @@ export const Navbar = () => {
         <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border/50 shadow-sm">
             <div className="container mx-auto px-6">
                 <div className="flex items-center justify-between h-20">
-
-                    {/* Logo and Mobile Menu Button Container (FIXED) */}
                     <div className="flex items-center w-full justify-between md:w-auto">
-                        {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
                             <span className="font-display text-2xl font-semibold tracking-tight text-foreground">
                                 Durable<span className="text-primary">Sofa</span>
                             </span>
                         </Link>
-
-                        {/* Mobile Menu Button - FIXED */}
                         <button
                             className="md:hidden p-2"
                             onClick={() => setIsOpen(!isOpen)}
@@ -116,7 +111,6 @@ export const Navbar = () => {
                         </button>
                     </div>
 
-                    {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks(isAuthenticated).map((link) => {
                             const IconComponent = link.icon;

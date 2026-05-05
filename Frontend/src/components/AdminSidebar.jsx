@@ -22,7 +22,7 @@ const AdminSidebar = () => {
             <Users size={20} />
             <span>Users</span>
         </NavLink>
-        <NavLink to='/dashboard/orders/:userId' className={({ isActive }) => isActive? 'bg-primary w-full py-3 px-5 rounded-lg flex items-center gap-3 text-white font-semibold' : 'hover:bg-primary/20 hover:text-foreground w-full py-3 px-5 rounded-lg flex items-center gap-3 text-muted-foreground font-medium transition-colors'}>
+        <NavLink to='/dashboard/orders' className={({ isActive }) => isActive? 'bg-primary w-full py-3 px-5 rounded-lg flex items-center gap-3 text-white font-semibold' : 'hover:bg-primary/20 hover:text-foreground w-full py-3 px-5 rounded-lg flex items-center gap-3 text-muted-foreground font-medium transition-colors'}>
             <Edit size={20} />
             <span>Orders</span>
         </NavLink>
