@@ -104,3 +104,62 @@ export const verifyPayment = async (req, res) => {
         });
     }
 }
+
+export const getMyOrders = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const orders = await Order.find({ userId })
+        .sort({ createdAt: -1 })
+        .populate("products.productID")
+        .populate("addressId");
+        return res.status(200).json({
+            success: true,
+            orders
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch orders",
+            error: error.message
+        });
+    }
+}
+
+export const getUserOrders = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const orders = await Order.find({ userId })
+        .sort({ createdAt: -1 })
+        .populate("products.productID", "name basePrice productImages")
+        .populate("userId", "firtsName lastName email");
+        return res.status(200).json({
+            success: true,
+            orders
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch user orders",
+            error: error.message
+        });
+    }
+}
+
+export const getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.find()
+        .sort({ createdAt: -1 })
+        .populate("products.productID", "name basePrice productImages")
+        .populate("userId", "firtsName lastName email");
+        return res.status(200).json({
+            success: true,
+            orders
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch orders",
+            error: error.message
+        });
+    }
+}

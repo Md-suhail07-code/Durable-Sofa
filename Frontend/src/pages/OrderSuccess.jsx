@@ -15,22 +15,15 @@ const OrderSuccess = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="bg-[#FCFCFC] rounded-[2.5rem] border border-border/60 p-10 flex flex-col items-center shadow-soft w-full max-w-md text-center"
       >
-        {/* Premium Success Icon Container */}
         <div className="h-16 w-16 rounded-3xl bg-green-500/10 flex items-center justify-center text-green-600 mb-6">
           <CheckCircle2 size={36} className="stroke-[1.5]" />
         </div>
-
-        {/* Heading */}
         <h1 className="font-display text-3xl font-bold text-charcoal mb-4 tracking-tight">
           Order Placed Successfully!
         </h1>
-
-        {/* Message */}
         <p className="text-muted-foreground text-sm leading-relaxed max-w-xs mx-auto mb-8">
           Thank you for choosing DurableSofa. Your order has been confirmed and is being prepared for delivery.
         </p>
-
-        {/* Action Buttons */}
         <div className="flex flex-col w-full gap-3">
           <Button 
             onClick={() => navigate('/products')} 
